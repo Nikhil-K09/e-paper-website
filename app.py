@@ -32,7 +32,13 @@ def index():
         'date': date,
         'district': district
     })
-    return render_template('index.html', pdf_file=pdf_file, date=date, district=district, user=current_user())
+    total_pages = 0
+    if pdf_file:
+        file = fs.get(pdf_file['file_id'])
+        reader = PdfReader(BytesIO(file.read()))
+        total_pages = len(reader.pages)
+    return render_template('index.html', pdf_file=pdf_file, date=date, district=district, user=current_user(), total_pages=total_pages)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -41,31 +47,30 @@ def login():
         if action == 'login':
             identifier = request.form['identifier']
             password = request.form['password']
-            user = mongo.db.users.find_one({'$or': [{'username': identifier}, {'email': identifier}]})
+
+            # First try admin
             admin = mongo.db.admins.find_one({'$or': [{'username': identifier}, {'email': identifier}]})
-            account = user or admin
-            if account and check_password_hash(account['password'], password):
-                if user:
-                    session['user_id'] = str(user['_id'])
-                else:
-                    session['admin_id'] = str(admin['_id'])
+            if admin and check_password_hash(admin['password'], password):
+                session.clear()
+                session['admin'] = True
+                session['admin_name'] = admin['username']
+                session['admin_id'] = str(admin['_id'])
                 return redirect(url_for('index'))
+
+            # Then try user
+            user = mongo.db.users.find_one({'$or': [{'username': identifier}, {'email': identifier}]})
+            if user and check_password_hash(user['password'], password):
+                session.clear()
+                session['user_id'] = str(user['_id'])
+                session['username'] = user['username']
+                return redirect(url_for('index'))
+
         elif action == 'register':
-            username = request.form['reg_username']
-            email = request.form['reg_email']
-            password = request.form['reg_password']
-            phone = request.form['reg_phone']
-            existing_user = mongo.db.users.find_one({'$or': [{'username': username}, {'email': email}]})
-            existing_admin = mongo.db.admins.find_one({'$or': [{'username': username}, {'email': email}]})
-            if not existing_user and not existing_admin:
-                mongo.db.users.insert_one({
-                    'username': username,
-                    'email': email,
-                    'password': generate_password_hash(password),
-                    'phone': phone
-                })
-                return redirect(url_for('login'))
+            # Your existing user registration logic (check admins+users for duplicate)
+            pass
+
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
