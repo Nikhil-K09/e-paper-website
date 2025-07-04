@@ -1,9 +1,68 @@
 {% extends "layout.html" %}
 {% block content %}
 {% if pdf_file %}
-<div class="pdf-container">
-  <iframe id="pdf-frame" src="{{ url_for('get_full_pdf', file_id=pdf_file.file_id) }}" width="100%" height="600px"></iframe>
+<canvas id="pdf-canvas"></canvas>
+<div class="nav-controls">
+  <button id="prevPage">&lt; Prev</button>
+  <span id="pageInfo">Page 1</span>
+  <button id="nextPage">Next &gt;</button>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const fileId = "{{ pdf_file.file_id }}";
+  const pdfUrl = `/get_full_pdf/${fileId}`;
+  let pdfDoc = null;
+  let pageNum = 1;
+  let totalPages = 0;
+  const canvas = document.getElementById('pdf-canvas');
+  const ctx = canvas.getContext('2d');
+
+  pdfjsLib.getDocument(pdfUrl).promise.then(doc => {
+    pdfDoc = doc;
+    totalPages = doc.numPages;
+    renderPage();
+  });
+
+  function renderPage() {
+    pdfDoc.getPage(pageNum).then(page => {
+      const viewport = page.getViewport({scale: calculateScale(page)});
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      page.render({
+        canvasContext: ctx,
+        viewport: viewport
+      });
+
+      document.getElementById('pageInfo').textContent = `Page ${pageNum} of ${totalPages}`;
+    });
+  }
+
+  function calculateScale(page) {
+    const desiredWidth = window.innerWidth * 0.9;
+    const viewport = page.getViewport({scale: 1});
+    return desiredWidth / viewport.width;
+  }
+
+  document.getElementById('prevPage').addEventListener('click', () => {
+    if (pageNum > 1) {
+      pageNum--;
+      renderPage();
+    }
+  });
+
+  document.getElementById('nextPage').addEventListener('click', () => {
+    if (pageNum < totalPages) {
+      pageNum++;
+      renderPage();
+    }
+  });
+
+  window.addEventListener('resize', renderPage);
+</script>
 {% else %}
 <p>No article available for this selection.</p>
 {% endif %}

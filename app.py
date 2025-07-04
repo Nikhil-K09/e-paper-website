@@ -38,6 +38,7 @@ def get_full_pdf(file_id):
     file = fs.get(ObjectId(file_id))
     return send_file(BytesIO(file.read()), mimetype='application/pdf')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
