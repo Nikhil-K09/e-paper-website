@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
 {% if pdf_file %}
-<canvas id="pdf-canvas"></canvas>
-<div class="nav-controls">
-  <button id="prevPage">&lt; Prev</button>
-  <span id="pageInfo">Page 1</span>
-  <button id="nextPage">Next &gt;</button>
+<div class="pdf-wrapper">
+  <canvas id="pdf-canvas"></canvas>
+  <div class="nav-btn left-btn" id="prevPage">&lt;</div>
+  <div class="nav-btn right-btn" id="nextPage">&gt;</div>
 </div>
+<div class="page-info" id="pageInfo">Page 1 of X</div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
@@ -28,7 +29,7 @@
 
   function renderPage() {
     pdfDoc.getPage(pageNum).then(page => {
-      const viewport = page.getViewport({scale: calculateScale(page)});
+      const viewport = page.getViewport({ scale: calculateScale(page) });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
@@ -43,7 +44,7 @@
 
   function calculateScale(page) {
     const desiredWidth = window.innerWidth * 0.9;
-    const viewport = page.getViewport({scale: 1});
+    const viewport = page.getViewport({ scale: 1 });
     return desiredWidth / viewport.width;
   }
 
