@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  {% if pdf_file %}
+    <div id="pdf-container">
+      <button class="nav-btn" id="prevPage">&lt;</button>
+      <iframe id="pdfViewer" src="{{ url_for('get_pdf', file_id=pdf_file.file_id, page=0) }}"></iframe>
+      <button class="nav-btn" id="nextPage">&gt;</button>
+    </div>
+  {% else %}
+    <p>No article available for this selection.</p>
+  {% endif %}
+{% endblock %}

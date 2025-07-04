@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  background: #333;
+  color: #fff;
+  padding: 10px;
+}
+.title {
+  font-weight: bold;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.controls input, .controls a, .controls span {
+  color: white;
+  text-decoration: none;
+}
+.manage-btn {
+  background: #444;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.manage-btn:hover {
+  background: #555;
+}
+#pdf-container {
+  position: relative;
+}
+#pdfViewer {
+  width: 100%;
+  height: 80vh;
+}
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+}
+#prevPage { left: 0; }
+#nextPage { right: 0; }
+.nav-btn:hover {
+  background: rgba(0,0,0,0.8);
+}
