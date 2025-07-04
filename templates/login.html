@@ -1,31 +1,25 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>Login</h2>
-<form method="POST">
-  <input type="hidden" name="action" value="login">
-  <input type="text" name="identifier" placeholder="Email or Username" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <button type="submit">Login</button>
-</form>
+<div class="auth-container">
 
-<p><a href="#" id="showRegister">Don't have an account? Register here</a></p>
+  <div class="auth-box">
+    <h2>Login</h2>
+    <form method="POST" class="auth-form">
+      <input type="hidden" name="action" value="login">
+      <input type="text" name="identifier" placeholder="Email or Username" required>
+      
+      <div class="password-wrapper">
+        <input type="password" name="password" id="loginPassword" placeholder="Password" required>
+        <span class="toggle-password" onclick="togglePassword('loginPassword', this)">👁</span>
+      </div>
 
-<div id="registerDiv" style="display: none;">
-  <h2>Register</h2>
-  <form method="POST">
-    <input type="hidden" name="action" value="register">
-    <input type="text" name="reg_username" placeholder="Username" required>
-    <input type="email" name="reg_email" placeholder="Email" required>
-    <input type="password" name="reg_password" placeholder="Password" required>
-    <input type="text" name="reg_phone" placeholder="Phone" required>
-    <button type="submit">Register</button>
-  </form>
+      <button type="submit" class="auth-btn">Login</button>
+    </form>
+
+    <p class="register-link">
+      <a href="{{ url_for('register') }}">Register here</a>
+    </p>
+  </div>
+
 </div>
-
-<script>
-document.getElementById('showRegister').addEventListener('click', function(e) {
-  e.preventDefault();
-  document.getElementById('registerDiv').style.display = 'block';
-});
-</script>
 {% endblock %}

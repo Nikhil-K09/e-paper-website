@@ -43,9 +43,12 @@ def get_full_pdf(file_id):
 def login():
     if request.method == 'POST':
         action = request.form.get('action')
+
         if action == 'login':
             identifier = request.form['identifier']
             password = request.form['password']
+
+            # Check admin
             admin = mongo.db.admins.find_one({'$or': [{'username': identifier}, {'email': identifier}]})
             if admin and check_password_hash(admin['password'], password):
                 session.clear()
@@ -53,28 +56,91 @@ def login():
                 session['admin_name'] = admin['username']
                 session['admin_id'] = str(admin['_id'])
                 return redirect(url_for('index'))
+
+            # Check user
             user = mongo.db.users.find_one({'$or': [{'username': identifier}, {'email': identifier}]})
             if user and check_password_hash(user['password'], password):
                 session.clear()
                 session['user_id'] = str(user['_id'])
                 session['username'] = user['username']
                 return redirect(url_for('index'))
+
+            # Invalid login
+            return render_template('login.html', error="Invalid credentials")
+
         elif action == 'register':
-            username = request.form['reg_username']
-            email = request.form['reg_email']
-            password = request.form['reg_password']
-            phone = request.form['reg_phone']
-            if mongo.db.users.find_one({'$or': [{'username': username}, {'email': email}]}) or \
-               mongo.db.admins.find_one({'$or': [{'username': username}, {'email': email}]}):
-                return redirect(url_for('login'))
-            mongo.db.users.insert_one({
-                'username': username,
-                'email': email,
-                'password': generate_password_hash(password),
-                'phone': phone
-            })
-            return redirect(url_for('login'))
+            # Redirect to register page if form submitted with register action (optional)
+            return redirect(url_for('register'))
+
     return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['reg_username']
+        email = request.form['reg_email']
+        password = request.form['reg_password']
+        phone = request.form['reg_phone']
+
+        # Check for existing username/email
+        if mongo.db.users.find_one({'$or': [{'username': username}, {'email': email}]}) or \
+           mongo.db.admins.find_one({'$or': [{'username': username}, {'email': email}]}):
+            return render_template('register.html', error="Username or email already exists.")
+
+        mongo.db.users.insert_one({
+            'username': username,
+            'email': email,
+            'password': generate_password_hash(password),
+            'phone': phone
+        })
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    user = mongo.db.users.find_one({'_id': ObjectId(session['user_id'])})
+    
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        updates = {}
+        username = request.form.get('username')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        password = request.form.get('password')
+        
+        if username and username != user['username']:
+            # Ensure username is unique
+            if mongo.db.users.find_one({'username': username, '_id': {'$ne': user['_id']}}):
+                return "Username already taken", 400
+            updates['username'] = username
+            session['username'] = username
+        
+        if email and email != user['email']:
+            # Ensure email is unique
+            if mongo.db.users.find_one({'email': email, '_id': {'$ne': user['_id']}}):
+                return "Email already registered", 400
+            updates['email'] = email
+        
+        if phone:
+            updates['phone'] = phone
+        
+        if password:
+            updates['password'] = generate_password_hash(password)
+        
+        if updates:
+            mongo.db.users.update_one({'_id': user['_id']}, {'$set': updates})
+        
+        return redirect(url_for('index'))
+    
+    return render_template('edit_profile.html', user=user)
 
 @app.route('/logout')
 def logout():

@@ -148,13 +148,6 @@ canvas {
 }
 
 /* Auth forms */
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-}
 
 .login-box,
 .register-box {
@@ -165,28 +158,110 @@ canvas {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.auth-box {
+  width: 350px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.auth-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
 
-.auth-form input,
-.auth-form button {
-  padding: 8px 10px;
-  font-size: 14px;
+.auth-form input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-.auth-form button {
+.auth-btn {
+  padding: 12px;
+  font-size: 16px;
   background: #333;
   color: #fff;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.auth-form button:hover {
+.auth-btn:hover {
   background: #555;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.register-link a {
+  color: #333;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+
+.register-box {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 300px;
+}
+
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .register-link {
@@ -208,4 +283,111 @@ canvas {
   right: 10px;
   cursor: pointer;
   font-size: 18px;
+}
+.manage-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.manage-heading {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.manage-subheading {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.manage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.manage-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.manage-btn {
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  border: none;
+  width: fit-content;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.manage-btn:hover {
+  background: #555;
+}
+
+.manage-list {
+  list-style: none;
+  padding: 0;
+}
+
+.manage-list-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.manage-delete-link {
+  color: #c00;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.manage-delete-link:hover {
+  text-decoration: underline;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;  /* directly below the trigger */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    min-width: 120px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 1;
+    border-radius: 4px;
+    
+}
+
+.dropdown-content a {
+    color: #ffffff;
+    padding:7px ;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {
+    background-color: #444;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown span {
+    cursor: pointer;
+    color: #ffffff;
+    font-weight: bold;
 }

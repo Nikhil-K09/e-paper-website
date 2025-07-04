@@ -1,52 +1,64 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Manage Articles</h2>
+<div class="manage-container">
+  <h2 class="manage-heading">Manage Articles</h2>
 
-<!-- Upload PDF -->
-<form method="POST" enctype="multipart/form-data">
-  <input type="hidden" name="action" value="upload">
-  <input type="date" name="date" required>
-  <select name="district" required>
-    {% for d in districts %}
-      <option value="{{ d.name }}">{{ d.name }}</option>
+  <!-- Upload PDF -->
+  <form method="POST" enctype="multipart/form-data" class="manage-form">
+    <input type="hidden" name="action" value="upload">
+    <label>
+      Date:
+      <input type="date" name="date" required class="manage-input">
+    </label>
+    <label>
+      District:
+      <select name="district" required class="manage-input">
+        {% for d in districts %}
+          <option value="{{ d.name }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      PDF:
+      <input type="file" name="pdf_file" accept="application/pdf" required class="manage-input">
+    </label>
+    <button type="submit" class="manage-btn">Upload PDF</button>
+  </form>
+
+  <hr>
+
+  <!-- Add District -->
+  <h3 class="manage-subheading">Add District</h3>
+  <form method="POST" class="manage-form">
+    <input type="hidden" name="action" value="add_district">
+    <input type="text" name="new_district" placeholder="New District" required class="manage-input">
+    <button type="submit" class="manage-btn">Add District</button>
+  </form>
+
+  <!-- Delete District -->
+  <h3 class="manage-subheading">Delete District</h3>
+  <form method="POST" class="manage-form">
+    <input type="hidden" name="action" value="delete_district">
+    <select name="del_district" required class="manage-input">
+      {% for d in districts %}
+        <option value="{{ d.name }}">{{ d.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="manage-btn">Delete District</button>
+  </form>
+
+  <hr>
+
+  <!-- List PDFs -->
+  <h3 class="manage-subheading">Uploaded Articles</h3>
+  <ul class="manage-list">
+    {% for a in articles %}
+      <li class="manage-list-item">
+        {{ a.date }} - {{ a.district }}
+        <a href="{{ url_for('delete', article_id=a._id) }}" class="manage-delete-link">Delete</a>
+      </li>
     {% endfor %}
-  </select>
-  <input type="file" name="pdf_file" accept="application/pdf" required>
-  <button type="submit">Upload PDF</button>
-</form>
-
-<hr>
-
-<!-- Add District -->
-<h3>Add District</h3>
-<form method="POST">
-  <input type="hidden" name="action" value="add_district">
-  <input type="text" name="new_district" placeholder="New District" required>
-  <button type="submit">Add</button>
-</form>
-
-<!-- Delete District -->
-<h3>Delete District</h3>
-<form method="POST">
-  <input type="hidden" name="action" value="delete_district">
-  <select name="del_district" required>
-    {% for d in districts %}
-      <option value="{{ d.name }}">{{ d.name }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit">Delete</button>
-</form>
-
-<hr>
-
-<!-- List PDFs -->
-<h3>Uploaded Articles</h3>
-<ul>
-  {% for a in articles %}
-    <li>{{ a.date }} - {{ a.district }}
-      <a href="{{ url_for('delete', article_id=a._id) }}">Delete</a>
-    </li>
-  {% endfor %}
-</ul>
+  </ul>
+</div>
 {% endblock %}

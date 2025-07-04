@@ -23,3 +23,13 @@ document.getElementById('datePicker')?.addEventListener('change', updateRoute);
 document.getElementById('districtPicker')?.addEventListener('change', updateRoute);
 
 
+function togglePassword(id, el) {
+  const input = document.getElementById(id);
+  if (input.type === "password") {
+    input.type = "text";
+    el.textContent = "👁";
+  } else {
+    input.type = "password";
+    el.textContent = "👁";
+  }
+}
