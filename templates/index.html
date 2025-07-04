@@ -1,38 +1,10 @@
 {% extends "layout.html" %}
-
 {% block content %}
-  {% if pdf_file %}
-  <div id="pdf-container">
-    <button class="nav-btn" id="prevPage">&lt;</button>
-    <iframe id="pdfViewer" src="{{ url_for('get_pdf', file_id=pdf_file.file_id, page=0) }}"></iframe>
-    <button class="nav-btn" id="nextPage">&gt;</button>
-  </div>
-  <script>
-    let currentPage = 0;
-    let totalPages = {{ total_pages }};
-    const fileId = "{{ pdf_file.file_id }}";
-
-    document.getElementById('prevPage').addEventListener('click', () => {
-      if (currentPage > 0) {
-        currentPage--;
-        updatePage();
-      }
-    });
-
-    document.getElementById('nextPage').addEventListener('click', () => {
-      if (currentPage < totalPages - 1) {
-        currentPage++;
-        updatePage();
-      }
-    });
-
-    function updatePage() {
-      const viewer = document.getElementById('pdfViewer');
-      viewer.src = `/get_pdf/${fileId}/${currentPage}`;
-    }
-  </script>
+{% if pdf_file %}
+<div class="pdf-container">
+  <iframe id="pdf-frame" src="{{ url_for('get_full_pdf', file_id=pdf_file.file_id) }}" width="100%" height="600px"></iframe>
+</div>
 {% else %}
-  <p>No article available for this selection.</p>
+<p>No article available for this selection.</p>
 {% endif %}
-
 {% endblock %}

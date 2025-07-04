@@ -13,11 +13,13 @@ function updatePage() {
   let iframe = document.getElementById('pdfViewer');
   iframe.src = iframe.src.replace(/page=\d+/, `page=${currentPage}`);
 }
-document.getElementById('datePicker')?.addEventListener('change', e => {
-  let district = document.getElementById('districtPicker').value;
-  window.location.href = `/?date=${e.target.value}&district=${district}`;
-});
-document.getElementById('districtPicker')?.addEventListener('change', e => {
-  let date = document.getElementById('datePicker').value;
-  window.location.href = `/?date=${date}&district=${e.target.value}`;
-});
+function updateRoute() {
+  const date = document.getElementById('datePicker').value;
+  const district = document.getElementById('districtPicker').value;
+  window.location.href = `/?date=${date}&district=${district}`;
+}
+
+document.getElementById('datePicker')?.addEventListener('change', updateRoute);
+document.getElementById('districtPicker')?.addEventListener('change', updateRoute);
+
+

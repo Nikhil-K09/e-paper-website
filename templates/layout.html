@@ -11,18 +11,22 @@
     <div class="title">MyE-Paper</div>
     <div class="controls">
       <input type="date" id="datePicker" value="{{ date }}">
-      <input type="text" id="districtPicker" placeholder="District" value="{{ district }}">
-      {% if session.admin %}
-  <span>{{ session.admin_name }}</span>
-  <a href="{{ url_for('logout') }}">Logout</a>
-  <a href="{{ url_for('manage') }}">Manage</a>
-{% elif session.user_id %}
-  <span>{{ session.username }}</span>
-  <a href="{{ url_for('logout') }}">Logout</a>
-{% else %}
-  <a href="{{ url_for('login') }}">Login</a>
-{% endif %}
+      <select id="districtPicker">
+        {% for d in districts %}
+          <option value="{{ d.name }}" {% if d.name == district %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+      </select>
 
+      {% if session.admin %}
+        <span>{{ session.admin_name }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('manage') }}">Manage</a>
+      {% elif session.user_id %}
+        <span>{{ session.username }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+      {% endif %}
     </div>
   </header>
   <main>
