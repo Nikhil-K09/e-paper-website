@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="register-box">
+    <h2>Edit Profile</h2>
+    <form method="POST" class="auth-form">
+      <input type="text" name="username" value="{{ user.username }}" placeholder="Username" required>
+      <input type="email" name="email" value="{{ user.email }}" placeholder="Email" required>
+      <input type="text" name="phone" value="{{ user.phone }}" placeholder="Phone" required>
+      <input type="password" name="password" placeholder="New Password (leave blank to keep current)">
+      <button type="submit">Update Profile</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

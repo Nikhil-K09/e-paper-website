@@ -8,27 +8,43 @@
 </head>
 <body>
   <header>
-    <div class="title">MyE-Paper</div>
+    <div class="title">
+      <a href="{{ url_for('index') }}" class="home-link">MyE-Paper</a>
+    </div>
     <div class="controls">
+
       <input type="date" id="datePicker" value="{{ date }}">
+      
       <select id="districtPicker">
         {% for d in districts %}
           <option value="{{ d.name }}" {% if d.name == district %}selected{% endif %}>{{ d.name }}</option>
         {% endfor %}
       </select>
-
+      <a href="{{ url_for('index') }}" class="header-btn">Home</a>
       {% if session.admin %}
-        <span>{{ session.admin_name }}</span>
-        <a href="{{ url_for('logout') }}">Logout</a>
-        <a href="{{ url_for('manage') }}">Manage</a>
+        <a href="{{ url_for('manage') }}" class="header-btn">Manage</a>
+        <div class="dropdown">
+          <span class="header-btn">{{ session.admin_name }}</span>
+          <div class="dropdown-content">
+            <a href="{{ url_for('logout') }}">Logout</a>
+          </div>
+        </div>
+
       {% elif session.user_id %}
-        <span>{{ session.username }}</span>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <div class="dropdown">
+          <span class="header-btn">{{ session.username }}</span>
+          <div class="dropdown-content">
+            <a href="{{ url_for('edit_profile') }}">Edit Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+          </div>
+        </div>
+
       {% else %}
-        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('login') }}" class="header-btn">Login</a>
       {% endif %}
     </div>
   </header>
+
   <main>
     {% block content %}{% endblock %}
   </main>
