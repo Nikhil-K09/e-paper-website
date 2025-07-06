@@ -13,6 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 app.secret_key = os.getenv("SECRET_KEY")
+print(f"Loaded MONGO_URI: {app.config['MONGO_URI']}")
 mongo = PyMongo(app)
 fs = gridfs.GridFS(mongo.db)
 
